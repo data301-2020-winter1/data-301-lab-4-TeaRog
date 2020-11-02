@@ -39,7 +39,7 @@ def getSolution():
 def ListFiles():
     loop = True
     while(loop):
-      mydir = input('Enter a path to a file directory:\n')
+      mydir = input('Enter a path to a file directory: Currently in pwd\n')
       mydir = os.getcwd() + mydir
       if os.path.isdir(mydir):
           mylist = os.listdir(mydir)
@@ -125,20 +125,69 @@ def CountCaseBySex(df):
 """QD3"""
 def CountCaseByAgeGroup(df):    
     sns.countplot(y="Age_Group", data=df, order=['<10','10-19','20-29','40-49','50-59','60-69','70-79','80-89','90+','Unknown']).set_title("Number of Covid-19 Cases By Age Group")
-
+"""QD4"""
 def CountByAuthority(df):
-    sns.countplot(y="HA", data=df).set_title("Number of Covid-19 Cases By Sex")
-    """stopped here, not done this method, y axis in not done"""
+    sns.countplot(y="HA", hue="Sex", palette="pastel", data=df).set_title("Number of Covid-19 Cases By Regional Health Authority split by sex")
+"""QD5""" 
+def DataWrangling(df):
+    df["Reported_Date"] = pd.to_datetime(df["Reported_Date"]).dt.date
+    df["Reported_Date"] = df["Reported_Date"].astype("datetime64[ns]")
+    return df
+"""QD6""" 
+def DataWranglingII(df):
+    print("The earliest reported case of COVID-19 was: ", df["Reported_Date"].min())
+    print("The latest reported case of COVID-19 was:", df["Reported_Date"].max())
+"""QD7""" 
+def DataWranglingIII(df):
+    df['days_since'] = df["Reported_Date"] - df["Reported_Date"].min()
+    print(df['days_since'].dt.days)
+    df['days_since'] = df['days_since'].dt.days
+    return df
+"""QD8""" 
+def DaysSincePlot(df):
+    sns.countplot(x="days_since", hue='Sex', data=df)
+"""QD9BONUS""" 
+def QD8BONUS1(df):
+    sns.countplot(x="days_since", hue='Sex', data=df).legend(loc='upper left')
+def QD8BONUS2(df):
+    sns.countplot(x="days_since", hue='Sex', data=df, order = df['HA'].value_counts().index).legend(loc='upper left')
     
-"""main"""
-##getSolution()
-##ListFiles()
-##ListDirectories()
-##Tree()
-#MyVector()
-#MyRandomVector()
-#MyOperationVector()
-df = LoadData()
-#CountCaseBySex(df)
-#CountCaseByAgeGroup(df)
-CountByAuthority(df)
+
+def main():
+    print('-A------------------------------------------')
+    getSolution()
+    print('-B1------------------------------------------')
+    ListFiles()
+    print('-B2------------------------------------------')
+    ListDirectories()
+    print('-B3------------------------------------------')
+    Tree()
+    print('-C1------------------------------------------')
+    MyVector()
+    print('-C2------------------------------------------')
+    MyRandomVector()
+    print('-C4------------------------------------------')
+    MyOperationVector()
+    print('-D1------------------------------------------')
+    df = LoadData()
+    print('-D2------------------------------------------')
+    CountCaseBySex(df)
+    print('-D3------------------------------------------')
+    CountCaseByAgeGroup(df)
+    print('-D4------------------------------------------')
+    CountByAuthority(df)
+    print('-D5------------------------------------------')
+    df2 = DataWrangling(df)
+    print('-D6------------------------------------------')
+    DataWranglingII(df2)
+    print('-D7------------------------------------------')
+    df3 = DataWranglingIII(df2)
+    print('-D8------------------------------------------')
+    DaysSincePlot(df3)
+    print('-D8Bonus------------------------------------------')
+    QD8BONUS1(df3)
+    print('-D8Bonus------------------------------------------')
+    QD8BONUS2(df3)   
+    print('-------------------------------------------')
+    
+main()
